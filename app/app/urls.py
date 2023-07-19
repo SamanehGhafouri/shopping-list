@@ -22,6 +22,7 @@ from drf_spectacular.views import (
 from shoppinglist import views
 
 urlpatterns = [
+    # back end paths
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path(
@@ -30,6 +31,10 @@ urlpatterns = [
         name='api-docs'
     ),
     path('api/user/', include('user.urls')),
+    # front end paths
+    path('', views.home, name='home'),
     path('signup/', views.signupuser, name='signupuser'),
+    path('login/', views.loginuser, name='loginuser'),
+    path('logout/', views.logoutuser, name='logoutuser'),
     path('current/', views.currentshopinglist, name='currentshopinglist'),
 ]

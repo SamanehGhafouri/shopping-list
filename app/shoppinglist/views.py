@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, authenticate, logout
 from django.db import IntegrityError
 from django import forms
 import requests
+
+
+def home(request):
+    return render(request, 'shoppinglist/home.html')
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -70,6 +74,35 @@ def signupuser(request):
                     'error': 'Passwords did not match'
                     }
                 )
+
+
+def loginuser(request):
+    if request.method == 'GET':
+        return render(
+            request, 'shoppinglist/loginuser.html',
+            {'form': AuthenticationForm()})
+    else:
+        user = authenticate(
+            request,
+            email=request.POST['username'],
+            password=request.POST['password'])
+        if user is None:
+            return render(
+                request, 'shoppinglist/loginuser.html',
+                {
+                    'form': AuthenticationForm(),
+                    'error': 'Username and password did not match'
+                    }
+                )
+        else:
+            login(request, user)
+            return redirect('currentshopinglist')
+
+
+def logoutuser(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
 
 
 def currentshopinglist(request):
