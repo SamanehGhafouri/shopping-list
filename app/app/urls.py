@@ -31,10 +31,12 @@ urlpatterns = [
         name='api-docs'
     ),
     path('api/user/', include('user.urls')),
+    path('api/store/', include('store.urls')),
     # front end paths
     path('', views.home, name='home'),
     path('signup/', views.signupuser, name='signupuser'),
     path('login/', views.loginuser, name='loginuser'),
     path('logout/', views.logoutuser, name='logoutuser'),
+    path('create/', views.create_store, name='create_store'),
     path('current/', views.currentshopinglist, name='currentshopinglist'),
 ]
