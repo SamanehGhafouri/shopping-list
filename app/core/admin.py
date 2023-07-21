@@ -3,7 +3,7 @@ from core import models
 
 
 class StoreAdmin(admin.ModelAdmin):
-    readonly_fields = ['created',]
+    readonly_fields = ['created', ]
 
 
 # Register your models here.
