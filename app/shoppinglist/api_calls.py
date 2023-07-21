@@ -29,20 +29,25 @@ def create_user_api(username, password2, first_name, last_name):
         json=body)
     return response
 
+
 def create_store_api(store_name, important_val, token):
     body = {
-    'store_name': store_name,
-    'important': important_val
-    }
+        'store_name': store_name,
+        'important': important_val
+        }
     response = requests.post(
                 'http://127.0.0.1:8000/api/store/stores/',
-                headers={'Content-Type': 'application/json', 'Authorization':'Token ' + token},
+                headers={
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + token
+                    },
                 json=body)
     return response
+
 
 def get_stores_api(token):
     response = requests.get(
             'http://127.0.0.1:8000/api/store/stores/',
-            headers={'Authorization':'Token ' + token})
+            headers={'Authorization': 'Token ' + token})
     data = response.json()
     return data

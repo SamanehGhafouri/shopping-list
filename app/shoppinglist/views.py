@@ -83,11 +83,14 @@ def loginuser(request):
         response = redirect('create_store')
         response.set_cookie('auth_token', token, max_age=86400)
         return response
-    return render(request, 'shoppinglist/loginuser.html',
-                  {'form': AuthenticationForm(),
-                   'error': 'Username and password did not match'
-                    }
-                )
+    return render(
+        request,
+        'shoppinglist/loginuser.html',
+        {
+            'form': AuthenticationForm(),
+            'error': 'Username and password did not match'
+            }
+            )
 
 
 def logoutuser(request):
