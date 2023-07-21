@@ -1,0 +1,16 @@
+{% extends 'shoppinglist/base.html' %}
+
+{%block content%}
+
+<h1>Create Stores</h1>
+
+<h2>User Token {{ user_token }}</h2>
+
+<h2>{{ error }}</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit">Create</button>
+</form>
+
+{% endblock %}

@@ -2,6 +2,12 @@
 
 {%block content%}
 
-Current
+Current stores to go shopping
+<ul>
+    {% for data in stores_data %}
+        <li>{{data.store_name}}</li>
+    {% endfor %}
+
+</ul>
 
 {% endblock %}
