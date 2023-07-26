@@ -15,7 +15,6 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class StoreSerializer(serializers.ModelSerializer):
-    items = ItemSerializer(many=True, required=False)
 
     class Meta:
         model = Store
