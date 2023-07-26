@@ -52,3 +52,12 @@ class Store(models.Model):
 
     def __str__(self):
         return self.store_name
+
+
+class Item(models.Model):
+    """Store's item Model"""
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name

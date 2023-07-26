@@ -9,3 +9,4 @@ class StoreAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(models.User)
 admin.site.register(models.Store, StoreAdmin)
+admin.site.register(models.Item)
