@@ -7,9 +7,7 @@ Logged In as {{user.first_name}}     {{user.last_name}}
     <button type="submit">Logout</button>
 
 </form>
-
 {% else %}
-
 <a href="{% url 'signupuser' %}">Sign Up</a>
 <a href="{% url 'loginuser' %}">Login</a>
 

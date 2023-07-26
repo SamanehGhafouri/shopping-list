@@ -51,3 +51,14 @@ def get_stores_api(token):
             headers={'Authorization': 'Token ' + token})
     data = response.json()
     return data
+
+
+def get_items_of_a_store_api(store_pk, token):
+    payload = {'store_id': store_pk}
+    response = requests.get(
+        'http://127.0.0.1:8000/api/store/' + f'{store_pk}' + '/items/',
+        headers={'Authorization': 'Token ' + token},
+        params=payload
+    )
+    data = response.json()
+    return data

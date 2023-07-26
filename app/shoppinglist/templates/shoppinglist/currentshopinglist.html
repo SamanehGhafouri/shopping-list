@@ -5,7 +5,12 @@
 Current stores to go shopping
 <ul>
     {% for data in stores_data %}
-        <li>{{data.store_name}}</li>
+        <li>
+            {% if data.important %}<b>{% endif %}{{data.store_name}}{% if data.important %}</b>{% endif %}
+            <form method="link" action="{% url 'storeitemsview' data.id%}">
+                <button type="submit">items</button>
+            </form>
+        </li>
     {% endfor %}
 
 </ul>

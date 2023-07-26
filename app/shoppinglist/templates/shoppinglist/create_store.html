@@ -2,7 +2,10 @@
 
 {%block content%}
 
-<h1>Create Stores</h1>
+<h1>Create Stores or go to Current Shopping List</h1>
+<form method="link" action="{% url 'currentshopinglist'%}">
+    <button type="submit">Current Shopping List</button>
+</form>
 
 <h2>User Token {{ user_token }}</h2>
 

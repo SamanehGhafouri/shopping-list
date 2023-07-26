@@ -8,7 +8,8 @@ from .api_calls import (
     create_token_api,
     create_user_api,
     create_store_api,
-    get_stores_api)
+    get_stores_api,
+    get_items_of_a_store_api)
 
 
 def home(request):
@@ -115,7 +116,7 @@ def create_store(request):
     try:
         create_store_api(store_name, important_val, token)
         response = HttpResponse(token)
-        response = redirect('currentshopinglist')
+        response = redirect('create')
         return response
     except ValueError:
         return render(
@@ -130,3 +131,16 @@ def currentshopinglist(request):
         request,
         'shoppinglist/currentshopinglist.html',
         {'stores_data': stores_data})
+
+
+def storeitemsview(request, pk):
+    token = request.COOKIES.get('auth_token')
+    store_pk = pk
+    if token:
+        items = get_items_of_a_store_api(store_pk, token)
+        response = HttpResponse(token)
+        response = render(request,
+                          'shoppinglist/storeitemsview.html',
+                          {'store_pk': store_pk, 'items': items})
+        return response
+    return render(request, 'shoppinglist/home.html')

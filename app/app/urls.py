@@ -38,5 +38,8 @@ urlpatterns = [
     path('login/', views.loginuser, name='loginuser'),
     path('logout/', views.logoutuser, name='logoutuser'),
     path('create/', views.create_store, name='create_store'),
-    path('current/', views.currentshopinglist, name='currentshopinglist'),
+    path('currentshoppinglist/',
+         views.currentshopinglist, name='currentshopinglist'),
+    path('my-store/<int:pk>/items',
+         views.storeitemsview, name='storeitemsview'),
 ]
