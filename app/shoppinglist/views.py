@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.db import IntegrityError
 from .forms import StoreForm, CustomUserCreationForm, ItemForm
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .api_calls import (
     create_token_api,
     create_user_api,
@@ -153,7 +153,4 @@ def storeitemsview(request, pk):
     create_item_api(store_pk, item_name, token)
     items = get_items_of_a_store_api(store_pk, token)
     response = HttpResponse(token)
-    return render(
-        request,
-        'shoppinglist/storeitemsview.html',
-        {'store_pk': store_pk, 'items': items, 'item_form': ItemForm()})
+    return HttpResponseRedirect(request.path_info)
