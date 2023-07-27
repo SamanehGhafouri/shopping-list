@@ -2,14 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 from django.db import IntegrityError
-from .forms import StoreForm, CustomUserCreationForm
+from .forms import StoreForm, CustomUserCreationForm, ItemForm
 from django.http import HttpResponse
 from .api_calls import (
     create_token_api,
     create_user_api,
     create_store_api,
     get_stores_api,
-    get_items_of_a_store_api)
+    get_items_of_a_store_api,
+    create_item_api)
 
 
 def home(request):
@@ -136,11 +137,23 @@ def currentshopinglist(request):
 def storeitemsview(request, pk):
     token = request.COOKIES.get('auth_token')
     store_pk = pk
-    if token:
-        items = get_items_of_a_store_api(store_pk, token)
-        response = HttpResponse(token)
-        response = render(request,
-                          'shoppinglist/storeitemsview.html',
-                          {'store_pk': store_pk, 'items': items})
-        return response
-    return render(request, 'shoppinglist/home.html')
+    if request.method == 'GET':
+        if token:
+            items = get_items_of_a_store_api(store_pk, token)
+            response = HttpResponse(token)
+            response = render(
+                request,
+                'shoppinglist/storeitemsview.html',
+                {'store_pk': store_pk,
+                 'items': items, 'item_form': ItemForm()})
+            return response
+        return render(request, 'shoppinglist/home.html')
+
+    item_name = request.POST['item_name']
+    create_item_api(store_pk, item_name, token)
+    items = get_items_of_a_store_api(store_pk, token)
+    response = HttpResponse(token)
+    return render(
+        request,
+        'shoppinglist/storeitemsview.html',
+        {'store_pk': store_pk, 'items': items, 'item_form': ItemForm()})

@@ -9,4 +9,11 @@
     {% endfor %}
 </ul>
 
+<h3>Create Items</h3>
+<form method="POST">
+    {% csrf_token %}
+    {{ item_form.as_p}}
+    <button type="submit">Create</button>
+</form>
+
 {% endblock %}

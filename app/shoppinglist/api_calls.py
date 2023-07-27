@@ -62,3 +62,19 @@ def get_items_of_a_store_api(store_pk, token):
     )
     data = response.json()
     return data
+
+
+def create_item_api(store_pk, item_name, token):
+    payload = {'store_id': store_pk}
+    body = {
+        'name': item_name,
+        'store': store_pk
+        }
+    response = requests.post(
+        'http://127.0.0.1:8000/api/store/' + f'{store_pk}' + '/items/',
+        headers={'Authorization': 'Token ' + token},
+        params=payload,
+        json=body
+    )
+    data = response.json()
+    return data
