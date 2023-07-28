@@ -10,7 +10,8 @@ from .api_calls import (
     create_store_api,
     get_stores_api,
     get_items_of_a_store_api,
-    create_item_api)
+    create_item_api,
+    delete_store_item_api)
 
 
 def home(request):
@@ -117,7 +118,7 @@ def create_store(request):
     try:
         create_store_api(store_name, important_val, token)
         response = HttpResponse(token)
-        response = redirect('create')
+        response = redirect('currentshopinglist')
         return response
     except ValueError:
         return render(
@@ -148,9 +149,16 @@ def storeitemsview(request, pk):
                  'items': items, 'item_form': ItemForm()})
             return response
         return render(request, 'shoppinglist/home.html')
-
-    item_name = request.POST['item_name']
-    create_item_api(store_pk, item_name, token)
-    items = get_items_of_a_store_api(store_pk, token)
-    response = HttpResponse(token)
-    return HttpResponseRedirect(request.path_info)
+    if "delete" in request.POST:
+        if token:
+            item_pk = int(request.POST['delete'])
+            delete_store_item_api(store_pk, item_pk, token)
+            response = HttpResponse(token)
+            return HttpResponseRedirect(request.path_info)
+    if "create" in request.POST:
+        if token:
+            item_name = request.POST['item_name']
+            create_item_api(store_pk, item_name, token)
+            items = get_items_of_a_store_api(store_pk, token)
+            response = HttpResponse(token)
+            return HttpResponseRedirect(request.path_info)

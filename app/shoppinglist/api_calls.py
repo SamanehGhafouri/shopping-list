@@ -61,6 +61,7 @@ def get_items_of_a_store_api(store_pk, token):
         params=payload
     )
     data = response.json()
+    print("This is items of a store$$$$$$$$$$$$$$$$$$$$$$$$$$$$", data)
     return data
 
 
@@ -78,3 +79,12 @@ def create_item_api(store_pk, item_name, token):
     )
     data = response.json()
     return data
+
+
+def delete_store_item_api(store_pk, item_pk, token):
+    response = requests.delete(
+        'http://127.0.0.1:8000/api/store/'
+        + f'{store_pk}' + '/item/' + f'{item_pk}/',
+        headers={'Authorization': 'Token ' + token},
+        )
+    return response.status_code
