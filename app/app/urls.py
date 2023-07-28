@@ -51,4 +51,9 @@ urlpatterns = [
         views.editstore,
         name='editstore'
     ),
+    path(
+        'edit-store-item/<int:storepk>/<int:itempk>/',
+        views.edit_store_item,
+        name='editstoreitem'
+    ),
 ]

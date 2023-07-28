@@ -13,7 +13,8 @@ from .api_calls import (
     create_item_api,
     delete_store_item_api,
     delete_store_api,
-    edit_store_api)
+    edit_store_api,
+    edit_store_item_api)
 
 
 def home(request):
@@ -195,3 +196,14 @@ def editstore(request, pk):
             return render(request,
                           'shoppinglist/editstore.html',
                           {'store-pk': pk, 'form': StoreForm})
+
+
+def edit_store_item(request, storepk, itempk):
+    token = request.COOKIES.get('auth_token')
+    if request.method == 'GET':
+        return render(request,
+                      'shoppinglist/editstoreitem.html',
+                      {'form': ItemForm()})
+    item_name = request.POST['item_name']
+    edit_store_item_api(storepk, itempk, item_name, token)
+    return redirect('storeitemsview', pk=storepk)

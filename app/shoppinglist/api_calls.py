@@ -107,3 +107,15 @@ def edit_store_api(store_pk, store_name, important, token):
         )
     data = response.json()
     return data
+
+
+def edit_store_item_api(store_pk, item_pk, item_name, token):
+    body = {'name': item_name, 'store': store_pk}
+    response = requests.put(
+        'http://127.0.0.1:8000/api/store/'
+        + f'{store_pk}' + '/item/' + f'{item_pk}/',
+        headers={'Authorization': 'Token ' + token},
+        json=body
+        )
+    data = response.json()
+    return data

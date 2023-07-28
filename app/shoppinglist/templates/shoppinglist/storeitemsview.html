@@ -5,7 +5,8 @@
 <h1>My Store Items</h1>
 <ul>
     {%for item in items%}
-        <h3><li>{{item.name}}</li></h3>
+        <p><li>{{item.name}}</li></p>
+        <a href="{% url 'editstoreitem' item.store item.id %}">edit</a>
         <form method="POST">
             <button name="delete" value="{{item.id}}"
              style="
