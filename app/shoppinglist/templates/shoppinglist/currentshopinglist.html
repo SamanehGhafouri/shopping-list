@@ -6,13 +6,30 @@
 <ul>
     {% for store in stores_data %}
         <li>
-            {% if store.important %}<b>{% endif %}
-                <h4><a href="{% url 'storeitemsview' store.id%}">{{store.store_name}}</a></h4>
-            {% if store.important %}</b>{% endif %}
+
+            {% if store.important %}
+            <b>
+            {% endif %}
+                <a href="{% url 'storeitemsview' store.id%}">{{store.store_name}}</a>
+            {% if store.important %}
+            </b>
+            {% endif %}
+            <br>
+
+            <a href="{% url 'editstore' store.id%}">edit</a>
             <form method="POST">
                 {% csrf_token %}
-                <button name="delete" value="{{store.id}}">delete</button>
+                <button name="delete" value="{{store.id}}"
+                style="
+                background: none!important;
+                border: none;
+                padding: 0!important;
+                color: #069;
+                text-decoration: underline;
+                cursor: pointer;"
+                >delete</button>
             </form>
+
         </li>
     {% endfor %}
 

@@ -1,0 +1,29 @@
+{% if user.is_authenticated %}
+
+Logged In as {{user.first_name}}     {{user.last_name}}
+
+<form action="{% url 'logoutuser' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+
+</form>
+<form action="{% url 'create_store' %}">
+    <button>Create Stores</button>
+</form>
+{% else %}
+<a href="{% url 'signupuser' %}">Sign Up</a>
+<a href="{% url 'loginuser' %}">Login</a>
+
+{% endif %}
+<br>
+<br>
+
+
+{% block content %}
+<h1>EDIT Store Info</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>Save</button>
+</form>
+{% endblock content %}

@@ -12,7 +12,8 @@ from .api_calls import (
     get_items_of_a_store_api,
     create_item_api,
     delete_store_item_api,
-    delete_store_api)
+    delete_store_api,
+    edit_store_api)
 
 
 def home(request):
@@ -171,3 +172,26 @@ def storeitemsview(request, pk):
             items = get_items_of_a_store_api(store_pk, token)
             response = HttpResponse(token)
             return HttpResponseRedirect(request.path_info)
+
+
+def editstore(request, pk):
+    token = request.COOKIES.get('auth_token')
+    store_pk = pk
+    if request.method == 'GET':
+        return render(request,
+                      'shoppinglist/editstore.html',
+                      {'store-pk': pk, 'form': StoreForm})
+    if request.method == 'POST':
+        store_name = request.POST['store_name']
+        important = request.POST.get('important')
+        if important == 'on':
+            important_val = 'true'
+        else:
+            important_val = 'false'
+        try:
+            edit_store_api(store_pk, store_name, important_val, token)
+            return redirect('currentshopinglist')
+        except ValueError:
+            return render(request,
+                          'shoppinglist/editstore.html',
+                          {'store-pk': pk, 'form': StoreForm})

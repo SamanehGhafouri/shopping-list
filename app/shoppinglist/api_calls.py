@@ -96,3 +96,14 @@ def delete_store_api(store_pk, token):
         headers={'Authorization': 'Token ' + token},
         )
     return response.status_code
+
+
+def edit_store_api(store_pk, store_name, important, token):
+    body = {'store_name': store_name, 'important': important}
+    response = requests.put(
+        'http://127.0.0.1:8000/api/store/' + f'{store_pk}/',
+        headers={'Authorization': 'Token ' + token},
+        json=body
+        )
+    data = response.json()
+    return data

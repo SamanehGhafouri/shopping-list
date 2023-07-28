@@ -46,4 +46,9 @@ urlpatterns = [
         'currentshoppinglist/<int:pk>/items/',
         views.storeitemsview,
         name='storeitemsview'),
+    path(
+        'editstore/<int:pk>/',
+        views.editstore,
+        name='editstore'
+    ),
 ]
