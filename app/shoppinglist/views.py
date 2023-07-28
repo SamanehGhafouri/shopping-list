@@ -11,7 +11,8 @@ from .api_calls import (
     get_stores_api,
     get_items_of_a_store_api,
     create_item_api,
-    delete_store_item_api)
+    delete_store_item_api,
+    delete_store_api)
 
 
 def home(request):
@@ -129,10 +130,18 @@ def create_store(request):
 def currentshopinglist(request):
     token = request.COOKIES.get('auth_token')
     stores_data = get_stores_api(token)
-    return render(
-        request,
-        'shoppinglist/currentshopinglist.html',
-        {'stores_data': stores_data})
+    if request.method == 'GET':
+        return render(
+            request,
+            'shoppinglist/currentshopinglist.html',
+            {'stores_data': stores_data})
+    if "delete" in request.POST:
+        if token:
+            store_pk = int(request.POST['delete'])
+            delete_store_api(store_pk, token)
+            response = HttpResponse(token)
+            response = HttpResponseRedirect(request.path_info)
+            return response
 
 
 def storeitemsview(request, pk):

@@ -2,13 +2,17 @@
 
 {%block content%}
 
-Current stores to go shopping
+<h1>Current stores to go shopping</h1>
 <ul>
-    {% for data in stores_data %}
+    {% for store in stores_data %}
         <li>
-            {% if data.important %}<b>{% endif %}
-                <h4><a href="{% url 'storeitemsview' data.id%}">{{data.store_name}}</a></h4>
-            {% if data.important %}</b>{% endif %}
+            {% if store.important %}<b>{% endif %}
+                <h4><a href="{% url 'storeitemsview' store.id%}">{{store.store_name}}</a></h4>
+            {% if store.important %}</b>{% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                <button name="delete" value="{{store.id}}">delete</button>
+            </form>
         </li>
     {% endfor %}
 

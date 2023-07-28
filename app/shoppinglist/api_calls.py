@@ -88,3 +88,11 @@ def delete_store_item_api(store_pk, item_pk, token):
         headers={'Authorization': 'Token ' + token},
         )
     return response.status_code
+
+
+def delete_store_api(store_pk, token):
+    response = requests.delete(
+        'http://127.0.0.1:8000/api/store/' + f'{store_pk}/',
+        headers={'Authorization': 'Token ' + token},
+        )
+    return response.status_code

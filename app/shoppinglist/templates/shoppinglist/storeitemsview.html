@@ -7,8 +7,7 @@
     {%for item in items%}
         <h3><li>{{item.name}}</li></h3>
         <form method="POST">
-            {% csrf_token %}
-            <button type="link" name="delete" value="{{item.id}}"
+            <button name="delete" value="{{item.id}}"
              style="
              background: none!important;
              border: none;
