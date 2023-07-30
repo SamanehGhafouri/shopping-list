@@ -6,10 +6,6 @@
 <form method="link" action="{% url 'currentshopinglist'%}">
     <button type="submit">Current Shopping List</button>
 </form>
-
-<h2>User Token {{ user_token }}</h2>
-
-<h2>{{ error }}</h2>
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p}}

@@ -8,6 +8,7 @@
         <p><li>{{item.name}}</li></p>
         <a href="{% url 'editstoreitem' item.store item.id %}">edit</a>
         <form method="POST">
+            {% csrf_token %}
             <button name="delete" value="{{item.id}}"
              style="
              background: none!important;
@@ -27,5 +28,6 @@
     {{ item_form.as_p}}
     <button type="submit" name="create">Create</button>
 </form>
+<button onclick="window.history.back()">Cancel</button>
 
 {% endblock %}

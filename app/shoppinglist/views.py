@@ -109,9 +109,10 @@ def create_store(request):
     token = request.COOKIES.get('auth_token')
     print("this is token from create store----->", token)
     if request.method == 'GET':
-        return render(
-            request, 'shoppinglist/create_store.html',
-            {'form': StoreForm()})
+        if token:
+            return render(
+                request, 'shoppinglist/create_store.html',
+                {'form': StoreForm()})
     important = request.POST.get("important")
     store_name = request.POST['store_name']
     if important == 'on':
@@ -149,61 +150,63 @@ def currentshopinglist(request):
 def storeitemsview(request, pk):
     token = request.COOKIES.get('auth_token')
     store_pk = pk
-    if request.method == 'GET':
-        if token:
+    if token:
+        if request.method == 'GET':
             items = get_items_of_a_store_api(store_pk, token)
             response = HttpResponse(token)
             response = render(
                 request,
                 'shoppinglist/storeitemsview.html',
                 {'store_pk': store_pk,
-                 'items': items, 'item_form': ItemForm()})
+                    'items': items, 'item_form': ItemForm()})
             return response
-        return render(request, 'shoppinglist/home.html')
-    if "delete" in request.POST:
-        if token:
-            item_pk = int(request.POST['delete'])
-            delete_store_item_api(store_pk, item_pk, token)
-            response = HttpResponse(token)
-            return HttpResponseRedirect(request.path_info)
-    if "create" in request.POST:
-        if token:
-            item_name = request.POST['item_name']
-            create_item_api(store_pk, item_name, token)
-            items = get_items_of_a_store_api(store_pk, token)
-            response = HttpResponse(token)
-            return HttpResponseRedirect(request.path_info)
+            return render(request, 'shoppinglist/home.html')
+        if "delete" in request.POST:
+            if token:
+                item_pk = int(request.POST['delete'])
+                delete_store_item_api(store_pk, item_pk, token)
+                response = HttpResponse(token)
+                return HttpResponseRedirect(request.path_info)
+        if "create" in request.POST:
+            if token:
+                item_name = request.POST['item_name']
+                create_item_api(store_pk, item_name, token)
+                items = get_items_of_a_store_api(store_pk, token)
+                response = HttpResponse(token)
+                return HttpResponseRedirect(request.path_info)
 
 
 def editstore(request, pk):
     token = request.COOKIES.get('auth_token')
-    store_pk = pk
-    if request.method == 'GET':
-        return render(request,
-                      'shoppinglist/editstore.html',
-                      {'store-pk': pk, 'form': StoreForm})
-    if request.method == 'POST':
-        store_name = request.POST['store_name']
-        important = request.POST.get('important')
-        if important == 'on':
-            important_val = 'true'
-        else:
-            important_val = 'false'
-        try:
-            edit_store_api(store_pk, store_name, important_val, token)
-            return redirect('currentshopinglist')
-        except ValueError:
+    if token:
+        store_pk = pk
+        if request.method == 'GET':
             return render(request,
                           'shoppinglist/editstore.html',
                           {'store-pk': pk, 'form': StoreForm})
+        if request.method == 'POST':
+            store_name = request.POST['store_name']
+            important = request.POST.get('important')
+            if important == 'on':
+                important_val = 'true'
+            else:
+                important_val = 'false'
+            try:
+                edit_store_api(store_pk, store_name, important_val, token)
+                return redirect('currentshopinglist')
+            except ValueError:
+                return render(request,
+                              'shoppinglist/editstore.html',
+                              {'store-pk': pk, 'form': StoreForm})
 
 
 def edit_store_item(request, storepk, itempk):
     token = request.COOKIES.get('auth_token')
-    if request.method == 'GET':
-        return render(request,
-                      'shoppinglist/editstoreitem.html',
-                      {'form': ItemForm()})
-    item_name = request.POST['item_name']
-    edit_store_item_api(storepk, itempk, item_name, token)
-    return redirect('storeitemsview', pk=storepk)
+    if token:
+        if request.method == 'GET':
+            return render(request,
+                          'shoppinglist/editstoreitem.html',
+                          {'form': ItemForm()})
+        item_name = request.POST['item_name']
+        edit_store_item_api(storepk, itempk, item_name, token)
+        return redirect('storeitemsview', pk=storepk)
