@@ -52,8 +52,8 @@ urlpatterns = [
         name='editstore'
     ),
     path(
-        'edit-store-item/<int:storepk>/<int:itempk>/',
-        views.edit_store_item,
+        'editstoreitem/<int:storepk>/<int:itempk>/',
+        views.editstoreitem,
         name='editstoreitem'
     ),
 ]

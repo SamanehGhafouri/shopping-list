@@ -4,17 +4,18 @@ from django.contrib.auth import login, authenticate, logout
 from django.db import IntegrityError
 from .forms import StoreForm, CustomUserCreationForm, ItemForm
 from django.http import HttpResponse, HttpResponseRedirect
-from .api_calls import (
-    create_token_api,
-    create_user_api,
-    create_store_api,
-    get_stores_api,
-    get_items_of_a_store_api,
-    create_item_api,
-    delete_store_item_api,
-    delete_store_api,
-    edit_store_api,
-    edit_store_item_api)
+# from .api_calls import (
+#     create_token_api,
+#     create_user_api,
+#     create_store_api,
+#     get_stores_api,
+#     get_items_of_a_store_api,
+#     create_item_api,
+#     delete_store_item_api,
+#     delete_store_api,
+#     edit_store_api,
+#     edit_store_item_api)
+from .api_calls import APICalls as api
 
 
 def home(request):
@@ -35,7 +36,7 @@ def signupuser(request):
 
     if password1 == password2:
         try:
-            create_user_api(
+            api.create_user(
                 username, password2,
                 first_name, last_name)
             user = authenticate(
@@ -44,7 +45,7 @@ def signupuser(request):
                 password=password2)
             if user is not None:
                 login(request, user)
-                token = create_token_api(email=username, password=password2)
+                token = api.create_token(email=username, password=password2)
                 response = HttpResponse(
                     "token from signup user in cookie----->",
                     token)
@@ -82,7 +83,7 @@ def loginuser(request):
         password=request.POST['password'])
     if user is not None and user.is_active:
         login(request, user)
-        token = create_token_api(
+        token = api.create_token(
             request.POST['username'],
             request.POST['password'])
         response = HttpResponse("token from login-->", token)
@@ -102,7 +103,11 @@ def loginuser(request):
 def logoutuser(request):
     if request.method == 'POST':
         logout(request)
-        return redirect('home')
+        token = None
+        response = HttpResponse(token)
+        response = redirect('home')
+        response.set_cookie('auth_token', token)
+        return response
 
 
 def createstore(request):
@@ -120,7 +125,7 @@ def createstore(request):
     else:
         important_val = 'false'
     try:
-        create_store_api(store_name, important_val, token)
+        api.create_store(store_name, important_val, token)
         response = HttpResponse(token)
         response = redirect('currentstores')
         return response
@@ -132,7 +137,7 @@ def createstore(request):
 
 def currentstores(request):
     token = request.COOKIES.get('auth_token')
-    stores_data = get_stores_api(token)
+    stores_data = api.get_stores(token)
     if request.method == 'GET':
         return render(
             request,
@@ -141,7 +146,7 @@ def currentstores(request):
     if "delete" in request.POST:
         if token:
             store_pk = int(request.POST['delete'])
-            delete_store_api(store_pk, token)
+            api.delete_store(store_pk, token)
             response = HttpResponse(token)
             response = HttpResponseRedirect(request.path_info)
             return response
@@ -152,7 +157,7 @@ def storeitemsview(request, pk):
     store_pk = pk
     if token:
         if request.method == 'GET':
-            items = get_items_of_a_store_api(store_pk, token)
+            items = api.get_items_of_a_store(store_pk, token)
             response = HttpResponse(token)
             response = render(
                 request,
@@ -164,14 +169,14 @@ def storeitemsview(request, pk):
         if "delete" in request.POST:
             if token:
                 item_pk = int(request.POST['delete'])
-                delete_store_item_api(store_pk, item_pk, token)
+                api.delete_store_item(store_pk, item_pk, token)
                 response = HttpResponse(token)
                 return HttpResponseRedirect(request.path_info)
         if "create" in request.POST:
             if token:
                 item_name = request.POST['item_name']
-                create_item_api(store_pk, item_name, token)
-                items = get_items_of_a_store_api(store_pk, token)
+                api.create_item(store_pk, item_name, token)
+                items = api.get_items_of_a_store(store_pk, token)
                 response = HttpResponse(token)
                 return HttpResponseRedirect(request.path_info)
 
@@ -192,7 +197,7 @@ def editstore(request, pk):
             else:
                 important_val = 'false'
             try:
-                edit_store_api(store_pk, store_name, important_val, token)
+                api.edit_store(store_pk, store_name, important_val, token)
                 return redirect('currentstores')
             except ValueError:
                 return render(request,
@@ -200,7 +205,7 @@ def editstore(request, pk):
                               {'store-pk': pk, 'form': StoreForm})
 
 
-def edit_store_item(request, storepk, itempk):
+def editstoreitem(request, storepk, itempk):
     token = request.COOKIES.get('auth_token')
     if token:
         if request.method == 'GET':
@@ -208,5 +213,5 @@ def edit_store_item(request, storepk, itempk):
                           'shoppinglist/editstoreitem.html',
                           {'form': ItemForm(), 'storepk': storepk})
         item_name = request.POST['item_name']
-        edit_store_item_api(storepk, itempk, item_name, token)
+        api.edit_store_item(storepk, itempk, item_name, token)
         return redirect('storeitemsview', pk=storepk)
