@@ -86,7 +86,7 @@ def loginuser(request):
             request.POST['username'],
             request.POST['password'])
         response = HttpResponse("token from login-->", token)
-        response = redirect('create_store')
+        response = redirect('createstore')
         response.set_cookie('auth_token', token, max_age=86400)
         return response
     return render(
@@ -105,13 +105,13 @@ def logoutuser(request):
         return redirect('home')
 
 
-def create_store(request):
+def createstore(request):
     token = request.COOKIES.get('auth_token')
     print("this is token from create store----->", token)
     if request.method == 'GET':
         if token:
             return render(
-                request, 'shoppinglist/create_store.html',
+                request, 'shoppinglist/createstore.html',
                 {'form': StoreForm()})
     important = request.POST.get("important")
     store_name = request.POST['store_name']
@@ -122,21 +122,21 @@ def create_store(request):
     try:
         create_store_api(store_name, important_val, token)
         response = HttpResponse(token)
-        response = redirect('currentshopinglist')
+        response = redirect('currentstores')
         return response
     except ValueError:
         return render(
-            request, 'shoppinglist/create_store.html',
+            request, 'shoppinglist/createstore.html',
             {'form': StoreForm(), 'error': 'Bad data!'})
 
 
-def currentshopinglist(request):
+def currentstores(request):
     token = request.COOKIES.get('auth_token')
     stores_data = get_stores_api(token)
     if request.method == 'GET':
         return render(
             request,
-            'shoppinglist/currentshopinglist.html',
+            'shoppinglist/currentstores.html',
             {'stores_data': stores_data})
     if "delete" in request.POST:
         if token:
@@ -160,7 +160,7 @@ def storeitemsview(request, pk):
                 {'store_pk': store_pk,
                     'items': items, 'item_form': ItemForm()})
             return response
-            return render(request, 'shoppinglist/home.html')
+            # return render(request, 'shoppinglist/home.html')
         if "delete" in request.POST:
             if token:
                 item_pk = int(request.POST['delete'])
@@ -193,7 +193,7 @@ def editstore(request, pk):
                 important_val = 'false'
             try:
                 edit_store_api(store_pk, store_name, important_val, token)
-                return redirect('currentshopinglist')
+                return redirect('currentstores')
             except ValueError:
                 return render(request,
                               'shoppinglist/editstore.html',
@@ -206,7 +206,7 @@ def edit_store_item(request, storepk, itempk):
         if request.method == 'GET':
             return render(request,
                           'shoppinglist/editstoreitem.html',
-                          {'form': ItemForm()})
+                          {'form': ItemForm(), 'storepk': storepk})
         item_name = request.POST['item_name']
         edit_store_item_api(storepk, itempk, item_name, token)
         return redirect('storeitemsview', pk=storepk)

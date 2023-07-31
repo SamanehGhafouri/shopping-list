@@ -1,7 +1,8 @@
 {% extends 'shoppinglist/base.html' %}
 
 {%block content%}
-
+{% comment %} <a href="{% url 'currentshoppinglist'%}">Back</a> {% endcomment %}
+<a href="{% url 'currentstores' %}">Back</a>
 <h1>My Store Items</h1>
 <ul>
     {%for item in items%}
@@ -28,6 +29,6 @@
     {{ item_form.as_p}}
     <button type="submit" name="create">Create</button>
 </form>
-<button onclick="window.history.back()">Cancel</button>
+{% comment %} <button onclick="window.history.back()">Cancel</button> {% endcomment %}
 
 {% endblock %}

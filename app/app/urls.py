@@ -37,13 +37,13 @@ urlpatterns = [
     path('signup/', views.signupuser, name='signupuser'),
     path('login/', views.loginuser, name='loginuser'),
     path('logout/', views.logoutuser, name='logoutuser'),
-    path('create/', views.create_store, name='create_store'),
+    path('createstore/', views.createstore, name='createstore'),
     path(
-        'currentshoppinglist/',
-        views.currentshopinglist,
-        name='currentshopinglist'),
+        'currentstores/',
+        views.currentstores,
+        name='currentstores'),
     path(
-        'currentshoppinglist/<int:pk>/items/',
+        'currentstores/<int:pk>/items/',
         views.storeitemsview,
         name='storeitemsview'),
     path(

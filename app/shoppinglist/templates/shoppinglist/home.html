@@ -1,7 +1,7 @@
 {% extends 'shoppinglist/base.html' %}
-
 {%block content%}
-
-Home
-
+<h2>Welcome to Shopping List</h2>
+Don't have an account? No worries, Create one here --><a href="{% url 'signupuser' %}">Sign Up</a>
+<br>
+Otherwise --> <a href="{% url 'loginuser' %}">Login</a>
 {% endblock %}

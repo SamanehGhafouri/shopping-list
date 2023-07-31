@@ -1,0 +1,17 @@
+{% extends 'shoppinglist/base.html' %}
+
+{%block content%}
+<h2>
+    <form method="link" action="{% url 'currentstores'%}">
+        <button type="submit">View Current Stores</button>
+    </form>
+</h2>
+<h2>Create Stores where you need to go shopping!</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit">Create</button>
+</form>
+
+{% endblock %}
