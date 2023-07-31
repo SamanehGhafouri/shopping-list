@@ -72,8 +72,10 @@ def signupuser(request):
 def loginuser(request):
     if request.method == 'GET':
         return render(
-            request, 'shoppinglist/loginuser.html',
-            {'form': AuthenticationForm()})
+            request,
+            'shoppinglist/loginuser.html',
+            {'form': AuthenticationForm()}
+            )
     user = authenticate(
         request,
         email=request.POST['username'],
@@ -83,7 +85,7 @@ def loginuser(request):
         token = api.create_token(
             request.POST['username'],
             request.POST['password'])
-        response = HttpResponse("token from login-->", token)
+        response = HttpResponse(token)
         response = redirect('createstore')
         response.set_cookie('auth_token', token, max_age=86400)
         return response
@@ -94,7 +96,7 @@ def loginuser(request):
             'form': AuthenticationForm(),
             'error': 'Username and password did not match'
             }
-            )
+        )
 
 
 def logoutuser(request):
@@ -109,12 +111,14 @@ def logoutuser(request):
 
 def createstore(request):
     token = request.COOKIES.get('auth_token')
-    print("this is token from create store----->", token)
+    if not token:
+        return render('home')
     if request.method == 'GET':
-        if token:
-            return render(
-                request, 'shoppinglist/createstore.html',
-                {'form': StoreForm()})
+        return render(
+            request,
+            'shoppinglist/createstore.html',
+            {'form': StoreForm()}
+            )
     important = request.POST.get("important")
     store_name = request.POST['store_name']
     if important == 'on':
@@ -128,54 +132,61 @@ def createstore(request):
         return response
     except ValueError:
         return render(
-            request, 'shoppinglist/createstore.html',
-            {'form': StoreForm(), 'error': 'Bad data!'})
+            request,
+            'shoppinglist/createstore.html',
+            {'form': StoreForm(), 'error': 'Bad data!'}
+            )
 
 
 def currentstores(request):
     token = request.COOKIES.get('auth_token')
     stores_data = api.get_stores(token)
+    if not token:
+        return render('home')
     if request.method == 'GET':
         return render(
             request,
             'shoppinglist/currentstores.html',
-            {'stores_data': stores_data})
+            {'stores_data': stores_data}
+            )
     if "delete" in request.POST:
-        if token:
-            store_pk = int(request.POST['delete'])
-            api.delete_store(store_pk, token)
-            response = HttpResponse(token)
-            response = HttpResponseRedirect(request.path_info)
-            return response
+        store_pk = int(request.POST['delete'])
+        api.delete_store(store_pk, token)
+        response = HttpResponse(token)
+        response = HttpResponseRedirect(request.path_info)
+        return response
 
 
 def storeitemsview(request, pk):
     token = request.COOKIES.get('auth_token')
     store_pk = pk
-    if token:
-        if request.method == 'GET':
+    if not token:
+        return render('home')
+    if request.method == 'GET':
+        items = api.get_items_of_a_store(store_pk, token)
+        response = HttpResponse(token)
+        response = render(
+            request,
+            'shoppinglist/storeitemsview.html',
+            {'store_pk': store_pk,
+             'items': items,
+             'item_form': ItemForm()}
+            )
+        return response
+        # return render(request, 'shoppinglist/home.html')
+    if "delete" in request.POST:
+        if token:
+            item_pk = int(request.POST['delete'])
+            api.delete_store_item(store_pk, item_pk, token)
+            response = HttpResponse(token)
+            return HttpResponseRedirect(request.path_info)
+    if "create" in request.POST:
+        if token:
+            item_name = request.POST['item_name']
+            api.create_item(store_pk, item_name, token)
             items = api.get_items_of_a_store(store_pk, token)
             response = HttpResponse(token)
-            response = render(
-                request,
-                'shoppinglist/storeitemsview.html',
-                {'store_pk': store_pk,
-                    'items': items, 'item_form': ItemForm()})
-            return response
-            # return render(request, 'shoppinglist/home.html')
-        if "delete" in request.POST:
-            if token:
-                item_pk = int(request.POST['delete'])
-                api.delete_store_item(store_pk, item_pk, token)
-                response = HttpResponse(token)
-                return HttpResponseRedirect(request.path_info)
-        if "create" in request.POST:
-            if token:
-                item_name = request.POST['item_name']
-                api.create_item(store_pk, item_name, token)
-                items = api.get_items_of_a_store(store_pk, token)
-                response = HttpResponse(token)
-                return HttpResponseRedirect(request.path_info)
+            return HttpResponseRedirect(request.path_info)
 
 
 def editstore(request, pk):
