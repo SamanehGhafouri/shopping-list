@@ -1,13 +1,12 @@
 {% extends 'shoppinglist/base.html' %}
 
 {%block content%}
-{% comment %} <a href="{% url 'currentshoppinglist'%}">Back</a> {% endcomment %}
-<a href="{% url 'currentstores' %}">Back</a>
+<a href="{% url 'current-stores' %}">Back</a>
 <h1>My Store Items</h1>
 <ul>
     {%for item in items%}
         <p><li>{{item.name}}</li></p>
-        <a href="{% url 'editstoreitem' item.store item.id %}">edit</a>
+        <a href="{% url 'edit-store-item' item.store item.id %}">edit</a>
         <form method="POST">
             {% csrf_token %}
             <button name="delete" value="{{item.id}}"
@@ -29,6 +28,4 @@
     {{ item_form.as_p}}
     <button type="submit" name="create">Create</button>
 </form>
-{% comment %} <button onclick="window.history.back()">Cancel</button> {% endcomment %}
-
 {% endblock %}

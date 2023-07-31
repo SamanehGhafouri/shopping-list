@@ -11,11 +11,11 @@ def home(request):
     return render(request, 'shoppinglist/home.html')
 
 
-def signupuser(request):
+def signup_user(request):
 
     if request.method == 'GET':
         return render(
-            request, 'shoppinglist/signupuser.html',
+            request, 'shoppinglist/signup_user.html',
             {'form': CustomUserCreationForm})
     username = request.POST['username']
     password1 = request.POST['password1']
@@ -27,7 +27,7 @@ def signupuser(request):
         "Tell user the password didn't match"
         return render(
             request,
-            'shoppinglist/signupuser.html',
+            'shoppinglist/signup_user.html',
             {
                 'form': CustomUserCreationForm,
                 'error': 'Passwords did not match'
@@ -37,7 +37,7 @@ def signupuser(request):
                         email=username, password=password2)
     if user is not None:
         return render(
-            request, 'shoppinglist/signupuser.html',
+            request, 'shoppinglist/signup_user.html',
             {
                 'form': CustomUserCreationForm,
                 'error': 'This Username is already taken! Please login.'
@@ -55,13 +55,13 @@ def signupuser(request):
             login(request, user)
             token = api.create_token(email=username, password=password2)
             response = HttpResponse(token)
-            response = redirect('createstore')
+            response = redirect('create-store')
             response.set_cookie('auth_token', token, max_age=86400)
             return response
 
     except IntegrityError:
         return render(
-            request, 'shoppinglist/signupuser.html',
+            request, 'shoppinglist/signup_user.html',
             {
                 'form': CustomUserCreationForm,
                 'error': 'The Username already exist'
@@ -69,11 +69,11 @@ def signupuser(request):
             )
 
 
-def loginuser(request):
+def login_user(request):
     if request.method == 'GET':
         return render(
             request,
-            'shoppinglist/loginuser.html',
+            'shoppinglist/login_user.html',
             {'form': AuthenticationForm()}
             )
     user = authenticate(
@@ -86,12 +86,12 @@ def loginuser(request):
             request.POST['username'],
             request.POST['password'])
         response = HttpResponse(token)
-        response = redirect('createstore')
+        response = redirect('create-store')
         response.set_cookie('auth_token', token, max_age=86400)
         return response
     return render(
         request,
-        'shoppinglist/loginuser.html',
+        'shoppinglist/login_user.html',
         {
             'form': AuthenticationForm(),
             'error': 'Username and password did not match'
@@ -99,7 +99,7 @@ def loginuser(request):
         )
 
 
-def logoutuser(request):
+def logout_user(request):
     if request.method == 'POST':
         logout(request)
         token = None
@@ -109,14 +109,14 @@ def logoutuser(request):
         return response
 
 
-def createstore(request):
+def create_store(request):
     token = request.COOKIES.get('auth_token')
     if not token:
         return render('home')
     if request.method == 'GET':
         return render(
             request,
-            'shoppinglist/createstore.html',
+            'shoppinglist/create_store.html',
             {'form': StoreForm()}
             )
     important = request.POST.get("important")
@@ -128,17 +128,17 @@ def createstore(request):
     try:
         api.create_store(store_name, important_val, token)
         response = HttpResponse(token)
-        response = redirect('currentstores')
+        response = redirect('current-stores')
         return response
     except ValueError:
         return render(
             request,
-            'shoppinglist/createstore.html',
+            'shoppinglist/create_store.html',
             {'form': StoreForm(), 'error': 'Bad data!'}
             )
 
 
-def currentstores(request):
+def current_stores(request):
     token = request.COOKIES.get('auth_token')
     stores_data = api.get_stores(token)
     if not token:
@@ -146,7 +146,7 @@ def currentstores(request):
     if request.method == 'GET':
         return render(
             request,
-            'shoppinglist/currentstores.html',
+            'shoppinglist/current_stores.html',
             {'stores_data': stores_data}
             )
     if "delete" in request.POST:
@@ -157,7 +157,7 @@ def currentstores(request):
         return response
 
 
-def storeitemsview(request, pk):
+def store_items(request, pk):
     token = request.COOKIES.get('auth_token')
     store_pk = pk
     if not token:
@@ -167,13 +167,12 @@ def storeitemsview(request, pk):
         response = HttpResponse(token)
         response = render(
             request,
-            'shoppinglist/storeitemsview.html',
+            'shoppinglist/store_items.html',
             {'store_pk': store_pk,
              'items': items,
              'item_form': ItemForm()}
             )
         return response
-        # return render(request, 'shoppinglist/home.html')
     if "delete" in request.POST:
         if token:
             item_pk = int(request.POST['delete'])
@@ -189,7 +188,7 @@ def storeitemsview(request, pk):
             return HttpResponseRedirect(request.path_info)
 
 
-def editstore(request, pk):
+def edit_store(request, pk):
     token = request.COOKIES.get('auth_token')
     if not token:
         return redirect('home')
@@ -199,7 +198,7 @@ def editstore(request, pk):
         data = {'store_name': store['store_name']}
         return render(
             request,
-            'shoppinglist/editstore.html',
+            'shoppinglist/edit_store.html',
             {'store-pk': pk, 'form': StoreForm(initial=data)}
             )
     store_name = request.POST['store_name']
@@ -210,16 +209,16 @@ def editstore(request, pk):
         important_val = 'false'
     try:
         api.edit_store(store_pk, store_name, important_val, token)
-        return redirect('currentstores')
+        return redirect('current-stores')
     except ValueError:
         return render(
             request,
-            'shoppinglist/editstore.html',
+            'shoppinglist/edit_store.html',
             {'store-pk': pk, 'form': StoreForm}
             )
 
 
-def editstoreitem(request, storepk, itempk):
+def edit_store_item(request, storepk, itempk):
     token = request.COOKIES.get('auth_token')
     if not token:
         return redirect('home')
@@ -228,9 +227,9 @@ def editstoreitem(request, storepk, itempk):
     if request.method == 'GET':
         return render(
             request,
-            'shoppinglist/editstoreitem.html',
+            'shoppinglist/edit_store_item.html',
             {'form': ItemForm(initial=data), 'storepk': storepk}
             )
     item_name = request.POST['item_name']
     api.edit_store_item(storepk, itempk, item_name, token)
-    return redirect('storeitemsview', pk=storepk)
+    return redirect('store-items', pk=storepk)

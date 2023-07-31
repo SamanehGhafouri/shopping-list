@@ -1,9 +1,9 @@
 {% extends 'shoppinglist/base.html' %}
 
 {% block content %}
-<a href="{% url 'currentstores' %}">Back</a>
-<h1>EDIT Store Info</h1>
-<form method="POST">
+<a href="{% url 'store-items' storepk%}">Back</a>
+<h1>Edit Item info</h1>
+<form method=POST>
     {% csrf_token %}
     {{form.as_p}}
     <button>Save</button>

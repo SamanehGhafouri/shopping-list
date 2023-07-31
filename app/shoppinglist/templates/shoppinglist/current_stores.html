@@ -1,7 +1,7 @@
 {% extends 'shoppinglist/base.html' %}
 
 {%block content%}
-<a href={%url 'createstore'%}>Back</a>
+<a href={%url 'create-store'%}>Back</a>
 
 <h1>Current stores to go shopping</h1>
 <ul>
@@ -11,13 +11,13 @@
             {% if store.important %}
             <b>
             {% endif %}
-                <a href="{% url 'storeitemsview' store.id%}">{{store.store_name}}</a>
+                <a href="{% url 'store-items' store.id%}">{{store.store_name}}</a>
             {% if store.important %}
             </b>
             {% endif %}
             <br>
 
-            <a href="{% url 'editstore' store.id%}">edit</a>
+            <a href="{% url 'edit-store' store.id%}">edit</a>
             <form method="POST">
                 {% csrf_token %}
                 <button name="delete" value="{{store.id}}"

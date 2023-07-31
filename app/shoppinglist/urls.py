@@ -6,26 +6,26 @@ from shoppinglist import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('signup/', views.signupuser, name='signupuser'),
-    path('login/', views.loginuser, name='loginuser'),
-    path('logout/', views.logoutuser, name='logoutuser'),
-    path('createstore/', views.createstore, name='createstore'),
+    path('signup/', views.signup_user, name='signup-user'),
+    path('login/', views.login_user, name='login-user'),
+    path('logout/', views.logout_user, name='logout-user'),
+    path('create-store/', views.create_store, name='create-store'),
     path(
-        'currentstores/',
-        views.currentstores,
-        name='currentstores'),
+        'current-stores/',
+        views.current_stores,
+        name='current-stores'),
     path(
-        'currentstores/<int:pk>/items/',
-        views.storeitemsview,
-        name='storeitemsview'),
+        'current-stores/store/<int:pk>/items/',
+        views.store_items,
+        name='store-items'),
     path(
-        'editstore/<int:pk>/',
-        views.editstore,
-        name='editstore'
+        'current-stores/store/<int:pk>/',
+        views.edit_store,
+        name='edit-store'
     ),
     path(
-        'editstoreitem/<int:storepk>/<int:itempk>/',
-        views.editstoreitem,
-        name='editstoreitem'
+        'current-stores/store/<int:storepk>/item/<int:itempk>/',
+        views.edit_store_item,
+        name='edit-store-item'
     ),
 ]

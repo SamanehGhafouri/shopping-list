@@ -2,15 +2,15 @@
 
 Logged In as {{user.first_name}}     {{user.last_name}}
 
-<form action="{% url 'logoutuser' %}" method="POST">
+<form action="{% url 'logout-user' %}" method="POST">
     {% csrf_token %}
     <button type="submit">Logout</button>
 
 </form>
 {% else %}
-Don't have an account? No worries, Create one here --><a href="{% url 'signupuser' %}">Sign Up</a>
+Don't have an account? No worries, Create one here --><a href="{% url 'signup-user' %}">Sign Up</a>
 <br>
-Otherwise --> <a href="{% url 'loginuser' %}">Login</a>
+Otherwise --> <a href="{% url 'login-user' %}">Login</a>
 {% endif %}
 <br>
 
