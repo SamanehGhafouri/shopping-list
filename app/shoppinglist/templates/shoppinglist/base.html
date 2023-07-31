@@ -7,5 +7,11 @@ Logged In as {{user.first_name}}     {{user.last_name}}
     <button type="submit">Logout</button>
 
 </form>
+{% else %}
+Don't have an account? No worries, Create one here --><a href="{% url 'signupuser' %}">Sign Up</a>
+<br>
+Otherwise --> <a href="{% url 'loginuser' %}">Login</a>
 {% endif %}
+<br>
+
 {% block content %}{% endblock content %}

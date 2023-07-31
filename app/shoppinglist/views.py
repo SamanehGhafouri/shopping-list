@@ -38,7 +38,7 @@ def signupuser(request):
                 response = HttpResponse(
                     "token from signup user in cookie----->",
                     token)
-                response = redirect('currentshopinglist')
+                response = redirect('createstore')
                 response.set_cookie('auth_token', token, max_age=86400)
                 return response
 
