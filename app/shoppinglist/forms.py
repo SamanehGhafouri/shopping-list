@@ -7,12 +7,18 @@ from django.contrib.auth.forms import UserCreationForm
 
 class ItemForm(forms.Form):
 
-    item_name = forms.CharField(max_length=150)
+    item_name = forms.CharField(
+        max_length=150,
+        widget=forms.TextInput(attrs={'autofocus': True})
+        )
 
 
 class StoreForm(forms.Form):
 
-    store_name = forms.CharField(max_length=150)
+    store_name = forms.CharField(
+        max_length=150,
+        widget=forms.TextInput(attrs={'autofocus': True})
+        )
     important = forms.BooleanField(required=False)
 
 
