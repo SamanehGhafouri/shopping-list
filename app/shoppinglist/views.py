@@ -4,17 +4,6 @@ from django.contrib.auth import login, authenticate, logout
 from django.db import IntegrityError
 from .forms import StoreForm, CustomUserCreationForm, ItemForm
 from django.http import HttpResponse, HttpResponseRedirect
-# from .api_calls import (
-#     create_token_api,
-#     create_user_api,
-#     create_store_api,
-#     get_stores_api,
-#     get_items_of_a_store_api,
-#     create_item_api,
-#     delete_store_item_api,
-#     delete_store_api,
-#     edit_store_api,
-#     edit_store_item_api)
 from .api_calls import APICalls as api
 
 
