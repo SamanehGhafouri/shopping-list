@@ -111,3 +111,20 @@ class APICalls:
             )
         data = response.json()
         return data
+
+    def get_store_by_id(store_pk, token):
+        response = requests.get(
+            'http://127.0.0.1:8000/api/store/' + f'{store_pk}/',
+            headers={'Authorization': 'Token ' + token},
+            )
+        data = response.json()
+        return data
+
+    def get_item_by_store_id(store_pk, item_pk, token):
+        response = requests.get(
+            'http://127.0.0.1:8000/api/store/'
+            + f'{store_pk}' + '/item/' + f'{item_pk}/',
+            headers={'Authorization': 'Token ' + token},
+            )
+        data = response.json()
+        return data

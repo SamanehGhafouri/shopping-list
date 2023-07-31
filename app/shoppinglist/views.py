@@ -180,35 +180,46 @@ def storeitemsview(request, pk):
 
 def editstore(request, pk):
     token = request.COOKIES.get('auth_token')
-    if token:
-        store_pk = pk
-        if request.method == 'GET':
-            return render(request,
-                          'shoppinglist/editstore.html',
-                          {'store-pk': pk, 'form': StoreForm})
-        if request.method == 'POST':
-            store_name = request.POST['store_name']
-            important = request.POST.get('important')
-            if important == 'on':
-                important_val = 'true'
-            else:
-                important_val = 'false'
-            try:
-                api.edit_store(store_pk, store_name, important_val, token)
-                return redirect('currentstores')
-            except ValueError:
-                return render(request,
-                              'shoppinglist/editstore.html',
-                              {'store-pk': pk, 'form': StoreForm})
+    if not token:
+        return redirect('home')
+    store = api.get_store_by_id(pk, token)
+    store_pk = pk
+    if request.method == 'GET':
+        data = {'store_name': store['store_name']}
+        return render(
+            request,
+            'shoppinglist/editstore.html',
+            {'store-pk': pk, 'form': StoreForm(initial=data)}
+            )
+    store_name = request.POST['store_name']
+    important = request.POST.get('important')
+    if important == 'on':
+        important_val = 'true'
+    else:
+        important_val = 'false'
+    try:
+        api.edit_store(store_pk, store_name, important_val, token)
+        return redirect('currentstores')
+    except ValueError:
+        return render(
+            request,
+            'shoppinglist/editstore.html',
+            {'store-pk': pk, 'form': StoreForm}
+            )
 
 
 def editstoreitem(request, storepk, itempk):
     token = request.COOKIES.get('auth_token')
-    if token:
-        if request.method == 'GET':
-            return render(request,
-                          'shoppinglist/editstoreitem.html',
-                          {'form': ItemForm(), 'storepk': storepk})
-        item_name = request.POST['item_name']
-        api.edit_store_item(storepk, itempk, item_name, token)
-        return redirect('storeitemsview', pk=storepk)
+    if not token:
+        return redirect('home')
+    item = api.get_item_by_store_id(storepk, itempk, token)
+    data = {'item_name': item['name']}
+    if request.method == 'GET':
+        return render(
+            request,
+            'shoppinglist/editstoreitem.html',
+            {'form': ItemForm(initial=data), 'storepk': storepk}
+            )
+    item_name = request.POST['item_name']
+    api.edit_store_item(storepk, itempk, item_name, token)
+    return redirect('storeitemsview', pk=storepk)
