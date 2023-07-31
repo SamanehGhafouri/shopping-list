@@ -23,42 +23,50 @@ def signupuser(request):
     first_name = request.POST['first_name']
     last_name = request.POST['last_name']
 
-    if password1 == password2:
-        try:
-            api.create_user(
-                username, password2,
-                first_name, last_name)
-            user = authenticate(
-                request,
-                email=username,
-                password=password2)
-            if user is not None:
-                login(request, user)
-                token = api.create_token(email=username, password=password2)
-                response = HttpResponse(
-                    "token from signup user in cookie----->",
-                    token)
-                response = redirect('createstore')
-                response.set_cookie('auth_token', token, max_age=86400)
-                return response
+    if password1 != password2:
+        "Tell user the password didn't match"
+        return render(
+            request,
+            'shoppinglist/signupuser.html',
+            {
+                'form': CustomUserCreationForm,
+                'error': 'Passwords did not match'
+                }
+            )
+    user = authenticate(request,
+                        email=username, password=password2)
+    if user is not None:
+        return render(
+            request, 'shoppinglist/signupuser.html',
+            {
+                'form': CustomUserCreationForm,
+                'error': 'This Username is already taken! Please login.'
+                }
+            )
+    try:
+        api.create_user(
+            username, password2,
+            first_name, last_name)
+        user = authenticate(
+            request,
+            email=username,
+            password=password2)
+        if user is not None:
+            login(request, user)
+            token = api.create_token(email=username, password=password2)
+            response = HttpResponse(token)
+            response = redirect('createstore')
+            response.set_cookie('auth_token', token, max_age=86400)
+            return response
 
-        except IntegrityError:
-            return render(
-                request, 'shoppinglist/signupuser.html',
-                {
-                    'form': CustomUserCreationForm,
-                    'error': 'The Username already exist'
-                    }
-                )
-    "Tell user the password didn't match"
-    return render(
-        request,
-        'shoppinglist/signupuser.html',
-        {
-            'form': CustomUserCreationForm,
-            'error': 'Passwords did not match'
-            }
-        )
+    except IntegrityError:
+        return render(
+            request, 'shoppinglist/signupuser.html',
+            {
+                'form': CustomUserCreationForm,
+                'error': 'The Username already exist'
+                }
+            )
 
 
 def loginuser(request):
