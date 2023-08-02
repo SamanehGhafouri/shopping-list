@@ -26,7 +26,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     first_name = forms.CharField(
         label='First Name',
-        min_length=5, max_length=150)
+        min_length=1, max_length=150)
     last_name = forms.CharField(
-        label='Last Name', min_length=5,
+        label='Last Name', min_length=1,
         max_length=150)

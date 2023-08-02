@@ -1,6 +1,6 @@
 {% extends 'shoppinglist/base.html' %}
 
-{%block content%}
+{% comment %} {%block content%}
 <a href="{% url 'current-stores' %}">Back</a>
 <h1>My Store Items</h1>
 <ul>
@@ -28,4 +28,59 @@
     {{ item_form.as_p}}
     <button type="submit" name="create">Create</button>
 </form>
+{% endblock %} {% endcomment %}
+
+
+
+{%block content%}
+
+<div class="row justify-content-center mt-5">
+    <a href={%url 'current-stores'%}>Back</a>
+    <div class="col-md-10">
+
+        {% if items %}
+             <h1>Store Items{{ items.count|pluralize }}</h1>
+        {% else %}
+            <h1>Store Items</h1>
+        {% endif %}
+    </div>
+</div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-10">
+    {% if items %}
+        <div class="list-group">
+            {% for item in items %}
+                <p class="list-group-item list-group-item-action mb-0">{{item.name}}</p>
+                <div class="overlay-right d-flex">
+                    <a class="btn btn-link" href="{% url 'edit-store-item' item.store item.id %}">edit</a>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-link" name="delete" value="{{item.id}}">delete</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center">
+            <h2>Looks like you don't have any Items in this Store!</h2>
+        </div>
+    {% endif %}
+    </div>
+</div>
+<div class="row justify-content-center mt-1">
+    <div class="col-md-5">
+        <h3>Create Item</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="item_name">Item Name</label>
+                <input type="text" name="item_name" class="form-control" id="item_name" autofocus>
+            </div>
+            <div class="mt-3">
+                <button type="submit" name="create" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}

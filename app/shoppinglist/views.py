@@ -40,7 +40,7 @@ def signup_user(request):
             request, 'shoppinglist/signup_user.html',
             {
                 'form': CustomUserCreationForm,
-                'error': 'This Username is already taken! Please login.'
+                'error': 'You are already signed up! Please login.'
                 }
             )
     try:
@@ -58,13 +58,20 @@ def signup_user(request):
             response = redirect('create-store')
             response.set_cookie('auth_token', token, max_age=86400)
             return response
+        return render(
+            request, 'shoppinglist/signup_user.html',
+            {
+                'form': CustomUserCreationForm,
+                'error': 'This email is already signed up!'
+                }
+            )
 
     except IntegrityError:
         return render(
             request, 'shoppinglist/signup_user.html',
             {
                 'form': CustomUserCreationForm,
-                'error': 'The Username already exist'
+                'error': 'The email already exist'
                 }
             )
 
@@ -170,7 +177,7 @@ def store_items(request, pk):
             'shoppinglist/store_items.html',
             {'store_pk': store_pk,
              'items': items,
-             'item_form': ItemForm()}
+             'form': ItemForm()}
             )
         return response
     if "delete" in request.POST:
@@ -195,7 +202,8 @@ def edit_store(request, pk):
     store = api.get_store_by_id(pk, token)
     store_pk = pk
     if request.method == 'GET':
-        data = {'store_name': store['store_name']}
+        data = {'store_name': store['store_name'],
+                'important': store['important']}
         return render(
             request,
             'shoppinglist/edit_store.html',
