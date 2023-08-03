@@ -19,6 +19,7 @@ services:
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
+      - URL=http://127.0.0.1:8000/
     depends_on:
       - db
 

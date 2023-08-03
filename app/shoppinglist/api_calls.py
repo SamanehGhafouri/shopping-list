@@ -1,7 +1,9 @@
 """API requests"""
 
 import requests
+import os
 
+URL = os.environ.get('URL')
 
 class APICalls:
 
@@ -11,7 +13,7 @@ class APICalls:
             'password': password
         }
         response = requests.post(
-                        'http://127.0.0.1:8000/api/user/token/',
+                        URL + 'api/user/token/',
                         headers={'Content-Type': 'application/json'},
                         json=body)
         token = response.json()
@@ -25,7 +27,7 @@ class APICalls:
             'last_name': last_name
         }
         response = requests.post(
-            'http://127.0.0.1:8000/api/user/create/',
+            URL + 'api/user/create/',
             headers={'Content-Type': 'application/json'},
             json=body)
         return response
@@ -36,7 +38,7 @@ class APICalls:
             'important': important_val
             }
         response = requests.post(
-                    'http://127.0.0.1:8000/api/store/stores/',
+                    URL + 'api/store/stores/',
                     headers={
                         'Content-Type': 'application/json',
                         'Authorization': 'Token ' + token
@@ -46,7 +48,7 @@ class APICalls:
 
     def get_stores(token):
         response = requests.get(
-                'http://127.0.0.1:8000/api/store/stores/',
+                URL + 'api/store/stores/',
                 headers={'Authorization': 'Token ' + token})
         data = response.json()
         return data
@@ -54,7 +56,7 @@ class APICalls:
     def get_items_of_a_store(store_pk, token):
         payload = {'store_id': store_pk}
         response = requests.get(
-            'http://127.0.0.1:8000/api/store/' + f'{store_pk}' + '/items/',
+            URL + 'api/store/' + f'{store_pk}' + '/items/',
             headers={'Authorization': 'Token ' + token},
             params=payload
         )
@@ -68,7 +70,7 @@ class APICalls:
             'store': store_pk
             }
         response = requests.post(
-            'http://127.0.0.1:8000/api/store/' + f'{store_pk}' + '/items/',
+            URL + 'api/store/' + f'{store_pk}' + '/items/',
             headers={'Authorization': 'Token ' + token},
             params=payload,
             json=body
@@ -78,7 +80,7 @@ class APICalls:
 
     def delete_store_item(store_pk, item_pk, token):
         response = requests.delete(
-            'http://127.0.0.1:8000/api/store/'
+            URL + 'api/store/'
             + f'{store_pk}' + '/item/' + f'{item_pk}/',
             headers={'Authorization': 'Token ' + token},
             )
@@ -86,7 +88,7 @@ class APICalls:
 
     def delete_store(store_pk, token):
         response = requests.delete(
-            'http://127.0.0.1:8000/api/store/' + f'{store_pk}/',
+            URL + 'api/store/' + f'{store_pk}/',
             headers={'Authorization': 'Token ' + token},
             )
         return response.status_code
@@ -94,7 +96,7 @@ class APICalls:
     def edit_store(store_pk, store_name, important, token):
         body = {'store_name': store_name, 'important': important}
         response = requests.put(
-            'http://127.0.0.1:8000/api/store/' + f'{store_pk}/',
+            URL + 'api/store/' + f'{store_pk}/',
             headers={'Authorization': 'Token ' + token},
             json=body
             )
@@ -104,7 +106,7 @@ class APICalls:
     def edit_store_item(store_pk, item_pk, item_name, token):
         body = {'name': item_name, 'store': store_pk}
         response = requests.put(
-            'http://127.0.0.1:8000/api/store/'
+            URL + 'api/store/'
             + f'{store_pk}' + '/item/' + f'{item_pk}/',
             headers={'Authorization': 'Token ' + token},
             json=body
@@ -114,7 +116,7 @@ class APICalls:
 
     def get_store_by_id(store_pk, token):
         response = requests.get(
-            'http://127.0.0.1:8000/api/store/' + f'{store_pk}/',
+            URL + 'api/store/' + f'{store_pk}/',
             headers={'Authorization': 'Token ' + token},
             )
         data = response.json()
@@ -122,7 +124,7 @@ class APICalls:
 
     def get_item_by_store_id(store_pk, item_pk, token):
         response = requests.get(
-            'http://127.0.0.1:8000/api/store/'
+            URL + 'api/store/'
             + f'{store_pk}' + '/item/' + f'{item_pk}/',
             headers={'Authorization': 'Token ' + token},
             )
