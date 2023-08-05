@@ -5,6 +5,7 @@ import os
 
 URL = os.environ.get('URL')
 
+
 class APICalls:
 
     def create_token(email, password):
