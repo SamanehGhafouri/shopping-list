@@ -25,3 +25,9 @@ Since the project is containerized with Docker all you need is to:
 6. To run all tests: `docker-compose run --rm app sh -c "python manage.py test"`
 
 ![plot](images/api-swagger.png)
+
+![plot](images/first-page.png)
+
+![plot](images/stores.png)
+
+![plot](images/store-items.png)
