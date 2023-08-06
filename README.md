@@ -24,6 +24,9 @@ Since the project is containerized with Docker all you need is to:
 5. If you want to create a `Django` Admin: In your terminal run `docker-compose run --rm app sh -c "python manage.py createsuperuser"` then enter username and password. Then you can login as an admin here `http://127.0.0.1:8000/admin'
 6. To run all tests: `docker-compose run --rm app sh -c "python manage.py test"`
 
+
+# Screenshots
+
 ![plot](images/api-swagger.png)
 
 ![plot](images/first-page.png)
