@@ -21,5 +21,5 @@ Since the project is containerized with Docker all you need is to:
 2. Add `.env` file to the root of your project and add appropriate values. You can find the sample of env at `.env.sample`. Note: You can copy/paste URL from `.env.sample` to `.env`. This is the url we need for network calls in app/shopping/api_calls.py.
 3. Run `docker build .` to build the project
 4. Run `docker-compose up` You should be able to see the project running at `http://127.0.0.1:8000/` or `http://localhost:8000/`.
-5. If you want to create a `Django` Admin: In your terminal run `docker-compose -f run --rm app sh -c "python manage.py createsuperuser"` then enter username and password. Then you can login as an admin here `http://127.0.0.1:8000/admin'
+5. If you want to create a `Django` Admin: In your terminal run `docker-compose run --rm app sh -c "python manage.py createsuperuser"` then enter username and password. Then you can login as an admin here `http://127.0.0.1:8000/admin'
 6. To run all tests: `docker-compose run --rm app sh -c "python manage.py test"`
